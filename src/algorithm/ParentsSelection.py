@@ -22,35 +22,31 @@ def trucationSelection(
     P: List
 ) -> Tuple[Individual, Individual]:
     return random.sample(P[:len(P)], 2)
-
+    
 def fitnessProportionateSelection(
     P: List
 ) -> Tuple[Individual, Individual]:
 
+    N = len(P)
 
-    print("P =", P[:3])
-    print("Typ pierwszego elementu:", type(P[0]))
-
-    
-    scores = [score for score, _ in P]
-
-    # zamiana problemu minimalizacyjnego na wagi
     weights = [
-        1.0 / (score + 1e-9)
-        for score in scores
+        2 * (N - i)
+        /
+        (N * (N + 1))
+        for i in range(N)
     ]
 
     parent1 = random.choices(
         P,
         weights=weights,
         k=1
-    )[0][1]
+    )[0]
 
     parent2 = random.choices(
         P,
         weights=weights,
         k=1
-    )[0][1]
+    )[0]
 
     return parent1, parent2
 

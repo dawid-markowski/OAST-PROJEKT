@@ -1,12 +1,12 @@
 {
     "alg_params": {
-        "population":     20,
-        "K":              10,
-        "p":              0.1,
-        "q":              0.1,
+        "population":     50,
+        "K":              20,
+        "p":              0.8,
+        "q":              0.05,
         "seed":           13,
         "epochs_num":     100,
-        "selection_type": "elistic_selection"
+        "selection_type": "trucation_selection"
     },
     "problem_type": "DAP"
 }
