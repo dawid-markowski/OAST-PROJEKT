@@ -1,12 +1,10 @@
 def importData(
-    path: str="" 
+    path: str = ""
 ) -> str:
+    """Zwraca zawartosc pliku albo "" gdy pliku nie da się odczytac."""
 
-    data = ""
     try:
         with open(path, mode="r", encoding="utf-8") as f:
-            data = f.read()
-    except FileNotFoundError | FileExistsError:
-        pass
-
-    return data
+            return f.read()
+    except OSError:  # m.in. FileNotFoundError, PermissionError, IsADirectoryError
+        return ""

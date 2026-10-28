@@ -1,16 +1,15 @@
-# AI
-
 import  re
-
 from    typing import Dict, List
+from    .utils import importData
+
 
 class DemandPath:
-    
+
     def __init__(
-        self, 
-        demand_id:  int, 
-        path_id:    int, 
-        links:      List
+        self,
+        demand_id:  int,
+        path_id:    int,
+        links:      List[int]
     ) -> None:
         self.demand_id = demand_id
         self.path_id   = path_id
@@ -19,41 +18,52 @@ class DemandPath:
     def __repr__(
         self
     ) -> str:
-        print(
-            f'''
-                demand_id = {self.demand_id}
-                path_id   = {self.path_id}
-                links     = {self.links}
-            '''
+        return (
+            f"DemandPath(demand_id={self.demand_id}, "
+            f"path_id={self.path_id}, links={self.links})"
         )
-        return ""
+
+
+_PATTERN = re.compile(
+    r"set\s+Demand(?:Path_links|_pathLinks)\[(\d+),(\d+)\]\s*:=\s*([\d\s]+);"
+)
+
+
+def _importDemandPaths(
+    content: str
+) -> Dict[int, Dict[int, DemandPath]]:
+
+    demand_paths: Dict[int, Dict[int, DemandPath]] = {}
+
+    for line in content.splitlines():
+        match = _PATTERN.search(line)
+
+        if match is None:
+            continue
+
+        demand_id = int(match.group(1))
+        path_id   = int(match.group(2))
+        links     = [int(x) for x in match.group(3).split()]
+
+        demand_paths.setdefault(demand_id, {})[path_id] = DemandPath(
+            demand_id,
+            path_id,
+            links
+        )
+
+    if not demand_paths:
+        raise ValueError("Nie znaleziono żadnych ścieżek (DemandPath_links / Demand_pathLinks)")
+
+    return demand_paths
 
 
 def loadDemandPaths(
     path: str
-) -> Dict:
-    demand_paths = {}
+) -> Dict[int, Dict[int, DemandPath]] | None:
 
-    pattern = re.compile(
-        r"set\s+DemandPath_links\[(\d+),(\d+)\]\s*:=\s*([\d\s]+);"
-    )
+    data = importData(path=path)
 
-    with open(path, "r") as file:
-        for line in file:
-            match = pattern.search(line)
+    if data == "":
+        return None
 
-            if match:
-                demand_id = int(match.group(1))
-                path_id = int(match.group(2))
-                links = [int(x) for x in match.group(3).split()]
-
-                if demand_id not in demand_paths:
-                    demand_paths[demand_id] = {}
-
-                demand_paths[demand_id][path_id] = DemandPath(
-                    demand_id,
-                    path_id,
-                    links
-                )
-
-    return demand_paths
+    return _importDemandPaths(data)
