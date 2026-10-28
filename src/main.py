@@ -1,28 +1,29 @@
 import os
 import random
 
-from typing                     import Dict, List, Any
+from typing import Dict, List, Any
 
-from algorithm.ParamsImporter   import ParamsImporter, importAlgParams
-from algorithm.solver           import solver
+from algorithm.ParamsImporter import ParamsImporter, importAlgParams
+from algorithm.solver import solver
 
-from graph.link                 import Links, openLinkParams
-from graph.demand               import Demand, openLinkDemands
-from graph.DemandPathLink       import DemandPath, loadDemandPaths
+from graph.link import Links, openLinkParams
+from graph.demand import Demand, openLinkDemands
+from graph.DemandPathLink import DemandPath, loadDemandPaths
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-DEFAUTL_PATH = os.getcwd() + "/params.json"
+DEFAUTL_PATH = os.path.join(BASE_DIR, "params.json")
+
 
 def _setupProblemPath(
-    problemType: str
+        problemType: str
 ) -> str:
-
     if problemType.lower() == "dap":
-        return os.getcwd() + "/alg_params/dap-net4-26Z.txt"
+        return os.path.join(BASE_DIR, "alg_params", "dap-net4-26Z.txt")
 
     if problemType.lower() == "ddap":
-        return os.getcwd() + "/alg_params/ddap-net4-26Z.txt"
-    
+        return os.path.join(BASE_DIR, "alg_params", "ddap-net4-26Z.txt")
+
     return ""
 
 def main() -> None:
@@ -40,8 +41,8 @@ def main() -> None:
         algParams=algParams,
         links=links,
         demands=demands,
-        demandPathLink=demandPathLink
+        demandPathLink=demandPathLink,
+        problemType=problemType  # (D)DAP
     )
-
 if __name__ == "__main__":
     main()

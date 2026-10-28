@@ -7,20 +7,19 @@ class ParamsImporter:
 
     def __init__(
         self,
-        population:  int=100,
-        crossovers:  int=20,
-        pc:          float=0.1,
-        pm:          float=0.1,
-        seed:        int=13,
-        epochs_num:  int=1000
+        population: int = 20,
+        crossovers: int = 10,
+        p: float = 0.1,
+        q: float = 0.1,
+        seed: int = 13,
+        epochs_num: int = 1000
     ) -> None:
-
-        self._population    = population
-        self._crossovers    = crossovers
-        self._pc            = pc
-        self._pm            = pm
-        self._seed          = seed
-        self._epochs_num    = epochs_num
+        self._population = population
+        self._crossovers = crossovers
+        self._p = p
+        self._q = q
+        self._seed = seed
+        self._epochs_num = epochs_num
 
     def getPopulationSize(
         self
@@ -32,16 +31,12 @@ class ParamsImporter:
     ) -> int:
         return self._crossovers
 
-    def getCrossoverProbabilty(
-        self
-    ) -> float:
-        return self._pc
+    def getIndividualMutationProbability(self) -> float:
+        return self._p
 
-    def getMutationProbabilty(
-        self
-    ) -> float:
-        return self._pm
-
+    def getGeneMutationProbability(self) -> float:
+        return self._q
+    
     def getSeed(
         self
     ) -> int:
@@ -74,7 +69,7 @@ def importAlgParams(
 
     try:
         file = open(path, mode="r+")
-    except FileExistsError, FileNotFoundError:
+    except FileExistsError as FileNotFoundError:
         return
     else:
         with file as fp:
@@ -82,13 +77,13 @@ def importAlgParams(
             params  = json.load(fp=fp)
             content = params["alg_params"]
             paramImporter = ParamsImporter(
-                population=content["population"],
-                crossovers=content["N"],
-                pc=content["pc"],
-                pm=content["pm"],
-                seed=content["seed"],
-                epochs_num=content["epochs_num"]            
-            )
+    		population=content["population"],
+    		crossovers=content["K"],
+    		p=content["p"],
+  	  	q=content["q"],
+    		seed=content["seed"],
+    		epochs_num=content["epochs_num"]
+	    )
             problem_type = params["problem_type"]
 
             if not _checkProblemType(problem_type):
