@@ -80,7 +80,7 @@ def create_plot(csv_path):
 
 if __name__ == "__main__":
     results_dir = Path(__file__).resolve().parent / "results"
-    csv_files = sorted(results_dir.glob("*_trajectory.csv"))
+    csv_files = sorted(results_dir.glob("*.csv"))
 
     if not csv_files:
         print("Brak plików trajectory.csv w folderze results.")

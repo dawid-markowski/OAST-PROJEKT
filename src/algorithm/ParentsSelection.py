@@ -11,17 +11,27 @@ def randomSelection(
     parent2 = random.choice(P)
     return parent1, parent2
 
+
 def elisticSelection(
-    P: List
+        P: List,
+        L: int = 5 #def elisticSelection(P: List, L: int = 5):,na czas testów wariantu $L=5$
 ) -> Tuple[Individual, Individual]:
     parent1 = P[0]
-    parent2 = random.choice(P[1:len(P)+1])
+
+    # Jeśli L nie jest podane, domyślnie bierzemy resztę populacji (L = N-1)
+    if L is None:
+        L = len(P) - 1
+
+    # Losujemy drugiego rodzica z L kolejnych chromosomów (od indeksu 1 do L włącznie)
+    parent2 = random.choice(P[1: L + 1])
     return parent1, parent2
 
-def trucationSelection(
-    P: List
+def truncationSelection(
+    P: List,
+    L: int = 5
 ) -> Tuple[Individual, Individual]:
-    return random.sample(P[:len(P)], 2)
+    # Losujemy dokładnie 2 unikalne chromosomy z L pierwszych na liście
+    return random.sample(P[:L], 2)
     
 def fitnessProportionateSelection(
     P: List
@@ -87,7 +97,7 @@ def setSelectionType(
             selection = elisticSelection
 
         case "trucation_selection":
-            selection = trucationSelection
+            selection = truncationSelection
         
         case "fitness_proportionate_selection":
             selection = fitnessProportionateSelection
